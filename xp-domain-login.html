@@ -277,7 +277,7 @@ try {
     originalParams.set('client_id', config.clientID);
 } catch (e) {
     // Fallback for testing outside of Auth0 context
-    config = { extraParams: {} };
+    config = { extraParams: {}, clientID: null };
     originalParams = new URLSearchParams();
     console.log('Running in test mode - Auth0 config not available');
 }
@@ -343,40 +343,17 @@ const DomainLoginApp = {
         authUrl.search = originalParams.toString();
         authUrl.searchParams.set('connection', domain);
         
-        // For domain-based logins, we can pass the username as a login hint
-        // This is particularly useful for email-based domains
+        // Pass username as login_hint to Auth0
+        // Note: The password is collected for UI authenticity but is not sent in the redirect.
+        // Auth0 will handle password authentication on its hosted login page.
         if (username.includes('@')) {
             authUrl.searchParams.set('login_hint', username);
         } else {
-            // For non-email usernames, we'll still pass it as a hint
             authUrl.searchParams.set('login_hint', username);
         }
         
-        // In a real implementation, the password would be handled by Auth0's hosted login
-        // For now, we redirect to the Auth0 authorize endpoint
-        // The actual password authentication happens on Auth0's side
-        
-        // Redirect to Auth0
+        // Redirect to Auth0 for actual authentication
         window.location.href = authUrl.toString();
-    },
-    
-    // Handle domain-specific routing based on username/email
-    detectDomainFromUsername: function(username) {
-        if (!username.includes('@')) {
-            return null;
-        }
-        
-        const domain = username.split('@')[1];
-        const domainMap = {
-            'kawaii.gdn': 'KawaiiGDN',
-            'onxbox.net': 'xbox',
-            'versatilenode.com': 'vnode',
-            'versatilenode.net': 'vnode',
-            'cgnetwork.uk': 'vnode',
-            'my.blufort.net': 'vnode'
-        };
-        
-        return domainMap[domain] || null;
     }
 };
 
