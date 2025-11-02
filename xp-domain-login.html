@@ -414,6 +414,117 @@
             filter: blur(2px);
             pointer-events: none;
         }
+        
+        /* Welcome screen styles */
+        .welcome-screen {
+            width: 450px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .welcome-screen.hidden {
+            display: none;
+        }
+        
+        .welcome-content {
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .welcome-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+        }
+        
+        .welcome-title {
+            font-size: 13px;
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 15px;
+        }
+        
+        .welcome-message {
+            font-size: 11px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .welcome-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .welcome-buttons button {
+            min-width: 90px;
+        }
+        
+        /* Notification dialog styles */
+        .notification-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+        
+        .notification-modal.active {
+            display: flex;
+        }
+        
+        .notification-window {
+            width: 380px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .notification-content {
+            padding: 20px;
+            font-size: 11px;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .notification-icon {
+            flex-shrink: 0;
+            font-size: 32px;
+        }
+        
+        .notification-icon.error {
+            color: #cc0000;
+        }
+        
+        .notification-icon.info {
+            color: #0054E3;
+        }
+        
+        .notification-icon.warning {
+            color: #FFA500;
+        }
+        
+        .notification-message {
+            flex: 1;
+            line-height: 1.5;
+        }
+        
+        .notification-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #808080;
+        }
+        
+        .notification-buttons button {
+            min-width: 75px;
+        }
     </style>
 </head>
 <body>
@@ -426,7 +537,48 @@
     </div>
 </div>
 
-<div class="login-container">
+<!-- Loading overlay -->
+<div class="loader-overlay" id="loader">
+    <div class="loader-content">
+        <div class="spinner"></div>
+        <div class="loader-text">Logging on...</div>
+    </div>
+</div>
+
+<!-- Welcome Screen -->
+<div class="login-container" id="welcome-container">
+    <div class="window welcome-screen" id="welcome-screen">
+        <div class="title-bar">
+            <div class="title-bar-text">Windows Logon</div>
+            <div class="title-bar-controls">
+                <button aria-label="Close" disabled></button>
+            </div>
+        </div>
+        
+        <div class="window-body welcome-content">
+            <img class="welcome-icon" 
+                 src="https://cdn.kawaiicdn.net/cdn/i/png/s_346b79a57743ff0b6aab345aa27072507a1320a9964fab015bea1357c39f8419324457b1e114c60c.png?sz=120" 
+                 alt="Windows Logo"
+                 onerror="this.style.display='none'">
+            
+            <div class="welcome-title">Welcome to Windows</div>
+            
+            <div class="welcome-message">
+                <p><strong>Network Sign-In Required</strong></p>
+                <p>This system requires you to sign in to the network before you can access your account.</p>
+                <p>By clicking "I Agree" below, you acknowledge that you will be signing in using your network credentials.</p>
+                <p>Please ensure you have your username and password ready.</p>
+            </div>
+            
+            <div class="welcome-buttons">
+                <button type="button" id="agree-button">I Agree</button>
+                <button type="button" disabled>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="login-container" id="main-login-container" style="display: none;">
     <div class="window login-window">
         <div class="title-bar">
             <div class="title-bar-text">Log On to Windows</div>
@@ -551,6 +703,10 @@ const DomainLoginApp = {
     loginContainer: null,
     helpModal: null,
     ssoModal: null,
+    notificationModal: null,
+    welcomeContainer: null,
+    welcomeScreen: null,
+    mainLoginContainer: null,
     
     init: function() {
         this.loader = document.getElementById('loader');
@@ -561,6 +717,15 @@ const DomainLoginApp = {
         this.loginContainer = document.querySelector('.login-container');
         this.helpModal = document.getElementById('help-modal');
         this.ssoModal = document.getElementById('sso-modal');
+        this.notificationModal = document.getElementById('notification-modal');
+        this.welcomeContainer = document.getElementById('welcome-container');
+        this.welcomeScreen = document.getElementById('welcome-screen');
+        this.mainLoginContainer = document.getElementById('main-login-container');
+        
+        // Welcome screen "I Agree" button
+        document.getElementById('agree-button').addEventListener('click', () => {
+            this.showLoginScreen();
+        });
         
         // Form submission handler (username/password login)
         document.getElementById('login-form').addEventListener('submit', (e) => {
@@ -613,24 +778,85 @@ const DomainLoginApp = {
             this.closeSSOModal();
         });
         
+        // SSO domain input - Enter key support
+        document.getElementById('sso-domain-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.handleSSODomainSubmit();
+            }
+        });
+        
+        // Notification modal OK button
+        document.getElementById('notification-ok-btn').addEventListener('click', () => {
+            this.closeNotification();
+        });
+        
+        // Notification modal close button
+        document.getElementById('notification-close-btn').addEventListener('click', () => {
+            this.closeNotification();
+        });
+        
         // Options button handler
         document.getElementById('options-button').addEventListener('click', () => {
-            alert('Login options:\n\n' +
-                  '• Traditional Login: Enter username, password, and select a domain\n' +
-                  '• Network Login: Click a network button to sign in directly via SSO\n\n' +
-                  'Some networks support SSO and will redirect you to their login page.\n' +
-                  'Contact your administrator if you forgot your password.');
+            this.showNotification(
+                'Login Options',
+                'Login options:\n\n' +
+                '• Traditional Login: Enter username, password, and select a domain\n' +
+                '• Network Login: Click a network button to sign in directly via SSO\n\n' +
+                'Some networks support SSO and will redirect you to their login page.\n' +
+                'Contact your administrator if you forgot your password.',
+                'info'
+            );
         });
     },
     
+    showLoginScreen: function() {
+        this.welcomeContainer.style.display = 'none';
+        this.mainLoginContainer.style.display = 'flex';
+        // Focus on username field
+        setTimeout(() => {
+            this.usernameField.focus();
+        }, 100);
+    },
+    
+    showNotification: function(title, message, type = 'info') {
+        const titleEl = document.getElementById('notification-title');
+        const messageEl = document.getElementById('notification-message');
+        const iconEl = document.getElementById('notification-icon');
+        
+        titleEl.textContent = title;
+        messageEl.textContent = message;
+        
+        // Set icon based on type
+        iconEl.className = 'notification-icon ' + type;
+        if (type === 'error') {
+            iconEl.innerHTML = '<i class="fas fa-times-circle"></i>';
+        } else if (type === 'warning') {
+            iconEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+        } else {
+            iconEl.innerHTML = '<i class="fas fa-info-circle"></i>';
+        }
+        
+        this.notificationModal.classList.add('active');
+        if (this.mainLoginContainer.style.display !== 'none') {
+            this.mainLoginContainer.classList.add('blurred');
+        }
+    },
+    
+    closeNotification: function() {
+        this.notificationModal.classList.remove('active');
+        this.mainLoginContainer.classList.remove('blurred');
+        this.usernameField.focus();
+    },
+    
     showHelpModal: function() {
-        this.loginContainer.classList.add('blurred');
+        this.mainLoginContainer.classList.add('blurred');
         this.helpModal.classList.add('active');
     },
     
     closeHelpModal: function() {
         this.helpModal.classList.remove('active');
-        this.loginContainer.classList.remove('blurred');
+        this.mainLoginContainer.classList.remove('blurred');
         this.usernameField.focus();
     },
     
@@ -643,7 +869,7 @@ const DomainLoginApp = {
     
     closeSSOModal: function() {
         this.ssoModal.classList.remove('active');
-        this.loginContainer.classList.remove('blurred');
+        this.mainLoginContainer.classList.remove('blurred');
         this.usernameField.focus();
     },
     
@@ -687,8 +913,11 @@ const DomainLoginApp = {
         } else {
             // Domain not found
             this.hideLoader();
-            alert('Domain not found.\n\nThe domain "' + domain + '" is not recognized.\nPlease check with your administrator or try another domain.');
-            this.usernameField.focus();
+            this.showNotification(
+                'Domain Not Found',
+                'The domain "' + domain + '" is not recognized.\n\nPlease check with your administrator or try another domain.',
+                'error'
+            );
         }
     },
     
@@ -729,17 +958,20 @@ const DomainLoginApp = {
         const domain = this.domainSelect.value;
         
         if (!username) {
-            alert('Please enter your user name.');
+            this.showNotification('Log On to Windows', 'Please enter your user name.', 'warning');
+            this.usernameField.focus();
             return;
         }
         
         if (!password) {
-            alert('Please enter your password.');
+            this.showNotification('Log On to Windows', 'Please enter your password.', 'warning');
+            this.passwordField.focus();
             return;
         }
         
         if (!domain) {
-            alert('Please select a network from the dropdown.');
+            this.showNotification('Log On to Windows', 'Please select a network from the dropdown.', 'warning');
+            this.domainSelect.focus();
             return;
         }
         
@@ -750,7 +982,11 @@ const DomainLoginApp = {
             // Test mode - just show what would happen
             setTimeout(() => {
                 this.hideLoader();
-                alert(`Test Mode:\nWould redirect to ${domain} login with username: ${username}`);
+                this.showNotification(
+                    'Test Mode',
+                    'Would redirect to ' + domain + ' login with username: ' + username,
+                    'info'
+                );
             }, 1500);
             return;
         }
@@ -779,7 +1015,11 @@ const DomainLoginApp = {
             // Test mode - just show what would happen
             setTimeout(() => {
                 this.hideLoader();
-                alert(`Test Mode:\nWould redirect to ${connection} for SSO authentication` + (loginHint ? `\nDomain: ${loginHint}` : ''));
+                this.showNotification(
+                    'Test Mode',
+                    'Would redirect to ' + connection + ' for SSO authentication' + (loginHint ? '\nDomain: ' + loginHint : ''),
+                    'info'
+                );
                 // Reset the form
                 this.usernameField.disabled = false;
                 this.passwordField.disabled = false;
@@ -873,6 +1113,30 @@ if (document.readyState === 'loading') {
             <div class="modal-buttons">
                 <button type="button" id="sso-cancel-btn">Cancel</button>
                 <button type="button" id="sso-submit-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="notification-modal" id="notification-modal">
+    <div class="window notification-window">
+        <div class="title-bar">
+            <div class="title-bar-text" id="notification-title">Windows</div>
+            <div class="title-bar-controls">
+                <button aria-label="Close" id="notification-close-btn"></button>
+            </div>
+        </div>
+        
+        <div class="window-body">
+            <div class="notification-content">
+                <div class="notification-icon" id="notification-icon">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <div class="notification-message" id="notification-message"></div>
+            </div>
+            <div class="notification-buttons">
+                <button type="button" id="notification-ok-btn">OK</button>
             </div>
         </div>
     </div>
