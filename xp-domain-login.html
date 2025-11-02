@@ -815,7 +815,8 @@ const DomainLoginApp = {
         const iconEl = document.getElementById('notification-icon');
         
         titleEl.textContent = title;
-        messageEl.textContent = message;
+        // Convert newlines to <br> tags for proper formatting
+        messageEl.innerHTML = message.replace(/\n/g, '<br>');
         
         // Set icon based on type
         iconEl.className = 'notification-icon ' + type;
