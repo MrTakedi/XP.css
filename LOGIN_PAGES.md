@@ -108,4 +108,7 @@ Feel free to modify these pages to match your organization's branding:
 - Traditional form layout
 - Nostalgic user experience
 
+![Windows XP Login Page](https://github.com/user-attachments/assets/6f91a7cf-bc30-407f-b0d8-7b3faa111e6b)
+*The Windows XP domain login page with filled credentials*
+
 Choose the theme that best matches your user base and brand identity!
