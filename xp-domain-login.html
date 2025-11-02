@@ -67,6 +67,7 @@
         
         .login-window {
             width: 500px;
+            max-width: calc(100vw - 40px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
@@ -348,6 +349,7 @@
         
         .modal-window {
             width: 420px;
+            max-width: calc(100vw - 40px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         
@@ -418,6 +420,7 @@
         /* Welcome screen styles */
         .welcome-screen {
             width: 450px;
+            max-width: calc(100vw - 40px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
@@ -481,6 +484,7 @@
         
         .notification-window {
             width: 380px;
+            max-width: calc(100vw - 40px);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
         
@@ -524,6 +528,115 @@
         
         .notification-buttons button {
             min-width: 75px;
+        }
+        
+        /* Responsive styles for mobile devices */
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 10px;
+            }
+            
+            .window-body {
+                padding: 15px;
+            }
+            
+            .welcome-content {
+                padding: 20px;
+            }
+            
+            .field-row {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-bottom: 10px;
+            }
+            
+            .field-row label {
+                width: auto;
+                text-align: left;
+                margin-right: 0;
+                margin-bottom: 4px;
+            }
+            
+            .field-row input,
+            .field-row select {
+                width: 100%;
+            }
+            
+            .network-buttons {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            
+            .button-row,
+            .welcome-buttons,
+            .modal-buttons,
+            .notification-buttons {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .button-row button,
+            .welcome-buttons button,
+            .modal-buttons button,
+            .notification-buttons button {
+                flex: 1;
+                min-width: 70px;
+            }
+            
+            .logo-section {
+                margin-bottom: 15px;
+                padding: 5px;
+            }
+            
+            .windows-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .welcome-icon {
+                width: 48px;
+                height: 48px;
+            }
+            
+            .modal-body-content {
+                padding: 15px;
+            }
+        }
+        
+        /* Responsive styles for very small mobile devices */
+        @media (max-width: 360px) {
+            .login-container {
+                padding: 5px;
+            }
+            
+            .window-body {
+                padding: 10px;
+            }
+            
+            .welcome-content {
+                padding: 15px;
+            }
+            
+            .network-btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+            
+            .network-btn i {
+                font-size: 12px;
+            }
+            
+            .welcome-text {
+                font-size: 12px;
+            }
+            
+            .instruction-text,
+            .field-row label,
+            .network-section-title,
+            .help-text,
+            .notification-message {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
