@@ -537,14 +537,6 @@
     </div>
 </div>
 
-<!-- Loading overlay -->
-<div class="loader-overlay" id="loader">
-    <div class="loader-content">
-        <div class="spinner"></div>
-        <div class="loader-text">Logging on...</div>
-    </div>
-</div>
-
 <!-- Welcome Screen -->
 <div class="login-container" id="welcome-container">
     <div class="window welcome-screen" id="welcome-screen">
@@ -700,7 +692,6 @@ const DomainLoginApp = {
     usernameField: null,
     passwordField: null,
     domainSelect: null,
-    loginContainer: null,
     helpModal: null,
     ssoModal: null,
     notificationModal: null,
@@ -714,7 +705,6 @@ const DomainLoginApp = {
         this.usernameField = document.getElementById('username');
         this.passwordField = document.getElementById('password');
         this.domainSelect = document.getElementById('domain');
-        this.loginContainer = document.querySelector('.login-container');
         this.helpModal = document.getElementById('help-modal');
         this.ssoModal = document.getElementById('sso-modal');
         this.notificationModal = document.getElementById('notification-modal');
@@ -838,7 +828,8 @@ const DomainLoginApp = {
         }
         
         this.notificationModal.classList.add('active');
-        if (this.mainLoginContainer.style.display !== 'none') {
+        // Only blur the login container if it's visible (welcome screen is hidden)
+        if (this.welcomeContainer.style.display === 'none') {
             this.mainLoginContainer.classList.add('blurred');
         }
     },
