@@ -37,6 +37,9 @@
     <!-- Fallback to local build if unpkg is blocked -->
     <link rel="stylesheet" href="dist/XP.css">
     
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
     <style>
         html, body {
             height: 100%;
@@ -63,7 +66,7 @@
         }
         
         .login-window {
-            width: 420px;
+            width: 500px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
@@ -115,6 +118,12 @@
             min-width: 0;
         }
         
+        .field-row input:disabled {
+            background-color: #d4d0c8;
+            color: #808080;
+            cursor: not-allowed;
+        }
+        
         .button-row {
             display: flex;
             justify-content: flex-end;
@@ -126,6 +135,123 @@
         
         .button-row button {
             min-width: 75px;
+        }
+        
+        /* Network selection section */
+        .network-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #808080;
+        }
+        
+        .network-section-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .network-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .network-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            border: 2px outset #d4d0c8;
+            cursor: pointer;
+            background: #d4d0c8;
+            color: #000;
+            transition: all 0.2s ease;
+        }
+        
+        .network-btn:hover:not(:disabled) {
+            filter: brightness(1.05);
+        }
+        
+        .network-btn:active:not(:disabled) {
+            border-style: inset;
+        }
+        
+        .network-btn i {
+            font-size: 14px;
+        }
+        
+        /* Brand colors for networks */
+        .network-btn.kawaiigdn {
+            background: linear-gradient(to bottom, #FFB3D9 0%, #FF69B4 100%);
+            border-color: #FF69B4;
+            color: white;
+        }
+        
+        .network-btn.xbox {
+            background: linear-gradient(to bottom, #15A515 0%, #107C10 100%);
+            border-color: #107C10;
+            color: white;
+        }
+        
+        .network-btn.discord {
+            background: linear-gradient(to bottom, #7289DA 0%, #5865F2 100%);
+            border-color: #5865F2;
+            color: white;
+        }
+        
+        .network-btn.google {
+            background: linear-gradient(to bottom, #669DF6 0%, #4285F4 100%);
+            border-color: #4285F4;
+            color: white;
+        }
+        
+        .network-btn.microsoft {
+            background: linear-gradient(to bottom, #33B5F5 0%, #00A4EF 100%);
+            border-color: #00A4EF;
+            color: white;
+        }
+        
+        .network-btn.line {
+            background: linear-gradient(to bottom, #06D406 0%, #00C300 100%);
+            border-color: #00C300;
+            color: white;
+        }
+        
+        .network-btn.weibo {
+            background: linear-gradient(to bottom, #FF4757 0%, #E6162D 100%);
+            border-color: #E6162D;
+            color: white;
+        }
+        
+        .network-btn.vnode {
+            background: linear-gradient(to bottom, #6C757D 0%, #495057 100%);
+            border-color: #495057;
+            color: white;
+        }
+        
+        /* SSO redirect message */
+        .sso-message {
+            display: none;
+            background: #ffffcc;
+            border: 1px solid #808080;
+            padding: 10px;
+            margin-bottom: 12px;
+            font-size: 11px;
+            text-align: center;
+        }
+        
+        .sso-message.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         /* Hidden loader overlay */
@@ -194,6 +320,100 @@
         .help-link button:hover {
             color: #0000FF;
         }
+        
+        .divider {
+            text-align: center;
+            margin: 15px 0;
+            font-size: 11px;
+            color: #808080;
+        }
+        
+        /* Modal overlay for XP-style dialogs */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal-window {
+            width: 420px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-body-content {
+            padding: 20px;
+            font-size: 11px;
+        }
+        
+        .help-image {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .help-image img {
+            width: 80px;
+            height: 80px;
+        }
+        
+        .help-text {
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .help-link-button {
+            background: none;
+            border: none;
+            color: #000080;
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 0;
+        }
+        
+        .help-link-button:hover {
+            color: #0000FF;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #808080;
+        }
+        
+        .modal-buttons button {
+            min-width: 75px;
+        }
+        
+        .error-message {
+            color: #cc0000;
+            font-size: 11px;
+            margin-top: 8px;
+            display: none;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+        
+        /* Blur effect for background when modal is active */
+        .login-container.blurred {
+            filter: blur(2px);
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
@@ -225,20 +445,27 @@
                 <div class="instruction-text">Enter your user name and password</div>
             </div>
             
+            <!-- SSO redirect message -->
+            <div class="sso-message" id="sso-message">
+                <strong>Redirecting to network login...</strong><br>
+                Please wait while we take you to the network to continue.
+            </div>
+            
             <form id="login-form">
                 <div class="field-row">
                     <label for="username">User name:</label>
-                    <input type="text" id="username" name="username" required autofocus>
+                    <input type="text" id="username" name="username" autofocus>
                 </div>
                 
                 <div class="field-row">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password">
                 </div>
                 
                 <div class="field-row">
                     <label for="domain">Log on to:</label>
                     <select id="domain" name="domain">
+                        <option value="">Select Network...</option>
                         <option value="KawaiiGDN">KawaiiGDN Domain</option>
                         <option value="xbox">Xbox Network</option>
                         <option value="discord">Discord</option>
@@ -255,6 +482,39 @@
                     <button type="submit">OK</button>
                 </div>
             </form>
+            
+            <div class="divider">- OR -</div>
+            
+            <!-- Network selection buttons for direct SSO -->
+            <div class="network-section">
+                <div class="network-section-title">Sign in with a network account:</div>
+                <div class="network-buttons">
+                    <button type="button" class="network-btn kawaiigdn" data-connection="KawaiiGDN">
+                        <i class="fa-solid fa-cloud"></i> KawaiiGDN
+                    </button>
+                    <button type="button" class="network-btn xbox" data-connection="xbox">
+                        <i class="fab fa-xbox"></i> Xbox
+                    </button>
+                    <button type="button" class="network-btn discord" data-connection="discord">
+                        <i class="fab fa-discord"></i> Discord
+                    </button>
+                    <button type="button" class="network-btn google" data-connection="google-oauth2">
+                        <i class="fab fa-google"></i> Google
+                    </button>
+                    <button type="button" class="network-btn microsoft" data-connection="windowslive">
+                        <i class="fab fa-windows"></i> Microsoft
+                    </button>
+                    <button type="button" class="network-btn line" data-connection="line">
+                        <i class="fab fa-line"></i> LINE
+                    </button>
+                    <button type="button" class="network-btn weibo" data-connection="weibo">
+                        <i class="fab fa-weibo"></i> Weibo
+                    </button>
+                    <button type="button" class="network-btn vnode" data-connection="vnode">
+                        <i class="fa-solid fa-network-wired"></i> VersatileNode
+                    </button>
+                </div>
+            </div>
             
             <div class="help-link">
                 <button type="button" id="options-button">Options &gt;&gt;</button>
@@ -284,28 +544,152 @@ try {
 
 const DomainLoginApp = {
     loader: null,
+    ssoMessage: null,
+    usernameField: null,
+    passwordField: null,
+    domainSelect: null,
+    loginContainer: null,
+    helpModal: null,
+    ssoModal: null,
     
     init: function() {
         this.loader = document.getElementById('loader');
+        this.ssoMessage = document.getElementById('sso-message');
+        this.usernameField = document.getElementById('username');
+        this.passwordField = document.getElementById('password');
+        this.domainSelect = document.getElementById('domain');
+        this.loginContainer = document.querySelector('.login-container');
+        this.helpModal = document.getElementById('help-modal');
+        this.ssoModal = document.getElementById('sso-modal');
         
-        // Form submission handler
+        // Form submission handler (username/password login)
         document.getElementById('login-form').addEventListener('submit', (e) => {
             e.preventDefault();
             this.handleLogin();
         });
         
-        // Help button handler
-        document.getElementById('help-button').addEventListener('click', () => {
-            alert('For assistance, please contact your system administrator or organization\'s IT help desk.');
+        // Network button click handlers (direct SSO)
+        document.querySelectorAll('.network-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const connection = e.currentTarget.getAttribute('data-connection');
+                this.handleNetworkLogin(connection);
+            });
         });
         
-        // Options button handler (could expand to show more options)
-        document.getElementById('options-button').addEventListener('click', () => {
-            alert('Additional login options:\n\n' +
-                  '• Use the dropdown to select your organization domain\n' +
-                  '• Contact your administrator if you forgot your password\n' +
-                  '• Ensure you are connected to the network');
+        // Help button handler - show help modal
+        document.getElementById('help-button').addEventListener('click', () => {
+            this.showHelpModal();
         });
+        
+        // Help modal OK button
+        document.getElementById('help-ok-btn').addEventListener('click', () => {
+            this.closeHelpModal();
+        });
+        
+        // Help modal close button
+        document.getElementById('help-close-btn').addEventListener('click', () => {
+            this.closeHelpModal();
+        });
+        
+        // SSO domain link in help modal
+        document.getElementById('sso-domain-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.closeHelpModal();
+            this.showSSOModal();
+        });
+        
+        // SSO modal submit button
+        document.getElementById('sso-submit-btn').addEventListener('click', () => {
+            this.handleSSODomainSubmit();
+        });
+        
+        // SSO modal cancel button
+        document.getElementById('sso-cancel-btn').addEventListener('click', () => {
+            this.closeSSOModal();
+        });
+        
+        // SSO modal close button
+        document.getElementById('sso-close-btn').addEventListener('click', () => {
+            this.closeSSOModal();
+        });
+        
+        // Options button handler
+        document.getElementById('options-button').addEventListener('click', () => {
+            alert('Login options:\n\n' +
+                  '• Traditional Login: Enter username, password, and select a domain\n' +
+                  '• Network Login: Click a network button to sign in directly via SSO\n\n' +
+                  'Some networks support SSO and will redirect you to their login page.\n' +
+                  'Contact your administrator if you forgot your password.');
+        });
+    },
+    
+    showHelpModal: function() {
+        this.loginContainer.classList.add('blurred');
+        this.helpModal.classList.add('active');
+    },
+    
+    closeHelpModal: function() {
+        this.helpModal.classList.remove('active');
+        this.loginContainer.classList.remove('blurred');
+        this.usernameField.focus();
+    },
+    
+    showSSOModal: function() {
+        this.ssoModal.classList.add('active');
+        document.getElementById('sso-domain-input').value = '';
+        document.getElementById('sso-error-message').classList.remove('active');
+        document.getElementById('sso-domain-input').focus();
+    },
+    
+    closeSSOModal: function() {
+        this.ssoModal.classList.remove('active');
+        this.loginContainer.classList.remove('blurred');
+        this.usernameField.focus();
+    },
+    
+    handleSSODomainSubmit: function() {
+        const domain = document.getElementById('sso-domain-input').value.trim();
+        const errorDiv = document.getElementById('sso-error-message');
+        
+        if (!domain) {
+            errorDiv.textContent = 'You cannot leave this blank!';
+            errorDiv.classList.add('active');
+            return;
+        }
+        
+        if (domain.includes('@')) {
+            errorDiv.textContent = 'You have to type a domain, not an email.';
+            errorDiv.classList.add('active');
+            return;
+        }
+        
+        errorDiv.classList.remove('active');
+        this.closeSSOModal();
+        this.showLoader();
+        this.handleDomainCheck(domain);
+    },
+    
+    handleDomainCheck: function(domain) {
+        // Domain mapping from shuffle-x.legacy.html
+        const domainMap = {
+            'kawaii.gdn': 'KawaiiGDN',
+            'onxbox.net': 'xbox',
+            'versatilenode.com': 'vnode',
+            'versatilenode.net': 'vnode',
+            'cgnetwork.uk': 'vnode',
+            'my.blufort.net': 'vnode'
+        };
+        
+        const connection = domainMap[domain];
+        
+        if (connection) {
+            this.redirect(connection, domain);
+        } else {
+            // Domain not found
+            this.hideLoader();
+            alert('Domain not found.\n\nThe domain "' + domain + '" is not recognized.\nPlease check with your administrator or try another domain.');
+            this.usernameField.focus();
+        }
     },
     
     showLoader: function() {
@@ -316,13 +700,46 @@ const DomainLoginApp = {
         this.loader.classList.remove('active');
     },
     
-    handleLogin: function() {
-        const username = document.getElementById('username').value.trim();
-        const password = document.getElementById('password').value;
-        const domain = document.getElementById('domain').value;
+    disableFields: function() {
+        this.usernameField.disabled = true;
+        this.passwordField.disabled = true;
+        this.domainSelect.disabled = true;
+    },
+    
+    showSSOMessage: function() {
+        this.ssoMessage.classList.add('active');
+    },
+    
+    handleNetworkLogin: function(connection) {
+        // Animate: disable the username/password fields
+        this.disableFields();
         
-        if (!username || !password) {
-            alert('Please enter both user name and password.');
+        // Show SSO redirect message
+        this.showSSOMessage();
+        
+        // Wait a moment for the animation, then redirect
+        setTimeout(() => {
+            this.redirect(connection);
+        }, 800);
+    },
+    
+    handleLogin: function() {
+        const username = this.usernameField.value.trim();
+        const password = this.passwordField.value;
+        const domain = this.domainSelect.value;
+        
+        if (!username) {
+            alert('Please enter your user name.');
+            return;
+        }
+        
+        if (!password) {
+            alert('Please enter your password.');
+            return;
+        }
+        
+        if (!domain) {
+            alert('Please select a network from the dropdown.');
             return;
         }
         
@@ -344,8 +761,6 @@ const DomainLoginApp = {
         authUrl.searchParams.set('connection', domain);
         
         // Pass username as login_hint to Auth0
-        // Note: The password is collected for UI authenticity but is not sent in the redirect.
-        // Auth0 will handle password authentication on its hosted login page.
         if (username.includes('@')) {
             authUrl.searchParams.set('login_hint', username);
         } else {
@@ -353,6 +768,37 @@ const DomainLoginApp = {
         }
         
         // Redirect to Auth0 for actual authentication
+        window.location.href = authUrl.toString();
+    },
+    
+    redirect: function(connection, loginHint = '') {
+        this.showLoader();
+        
+        // Check if we're in Auth0 context or test mode
+        if (!config.clientID) {
+            // Test mode - just show what would happen
+            setTimeout(() => {
+                this.hideLoader();
+                alert(`Test Mode:\nWould redirect to ${connection} for SSO authentication` + (loginHint ? `\nDomain: ${loginHint}` : ''));
+                // Reset the form
+                this.usernameField.disabled = false;
+                this.passwordField.disabled = false;
+                this.domainSelect.disabled = false;
+                this.ssoMessage.classList.remove('active');
+            }, 1500);
+            return;
+        }
+        
+        // Construct the Auth0 authorization URL for SSO
+        const authUrl = new URL(window.location.origin + '/authorize');
+        authUrl.search = originalParams.toString();
+        authUrl.searchParams.set('connection', connection);
+        
+        if (loginHint) {
+            authUrl.searchParams.set('login_hint', loginHint);
+        }
+        
+        // Redirect to Auth0 for SSO authentication
         window.location.href = authUrl.toString();
     }
 };
@@ -366,6 +812,71 @@ if (document.readyState === 'loading') {
 
 //]]>
 </script>
+
+<!-- Help Modal -->
+<div class="modal-overlay" id="help-modal">
+    <div class="window modal-window">
+        <div class="title-bar">
+            <div class="title-bar-text">Quick Help</div>
+            <div class="title-bar-controls">
+                <button aria-label="Close" id="help-close-btn"></button>
+            </div>
+        </div>
+        
+        <div class="window-body modal-body-content">
+            <div class="help-image">
+                <img src="https://cdn.kawaiicdn.net/cdn/i/png/s_b86a1f8b832e84d9ae196a5795351642109ff745ede477503f800f6709cd998261ead041b8e332f3.png" 
+                     alt="Help Icon"
+                     onerror="this.style.display='none'">
+            </div>
+            
+            <div class="help-text">
+                To sign in to the services, simply enter your user name and select your organization's network from the dropdown, or click one of the network buttons below.
+            </div>
+            
+            <hr style="border-color: #808080;">
+            
+            <div style="text-align: center;">
+                <button type="button" class="help-link-button" id="sso-domain-link">
+                    I don't have a company email...
+                </button>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="button" id="help-ok-btn">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SSO Domain Modal -->
+<div class="modal-overlay" id="sso-modal">
+    <div class="window modal-window">
+        <div class="title-bar">
+            <div class="title-bar-text">SSO Domain</div>
+            <div class="title-bar-controls">
+                <button aria-label="Close" id="sso-close-btn"></button>
+            </div>
+        </div>
+        
+        <div class="window-body modal-body-content">
+            <div class="help-text">
+                Please enter your organization's domain:
+            </div>
+            
+            <div class="field-row" style="align-items: flex-start; flex-direction: column;">
+                <label for="sso-domain-input" style="width: auto; text-align: left; margin-bottom: 5px;">Domain:</label>
+                <input type="text" id="sso-domain-input" placeholder="example.com" style="width: 100%;">
+                <div class="error-message" id="sso-error-message"></div>
+            </div>
+            
+            <div class="modal-buttons">
+                <button type="button" id="sso-cancel-btn">Cancel</button>
+                <button type="button" id="sso-submit-btn">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
