@@ -1,4 +1,29 @@
 <!DOCTYPE html>
+<!--
+    Windows XP Domain Login Page for Auth0
+    
+    This is a faithful recreation of the Windows XP domain login screen
+    (the one that appeared after pressing Ctrl+Alt+Del at the Windows logon screen).
+    
+    Features:
+    - Authentic Windows XP visual styling using XP.css
+    - Full Auth0 integration for enterprise SSO
+    - Support for multiple authentication providers (KawaiiGDN, Xbox, Discord, Google, Microsoft, LINE, Weibo, VersatileNode)
+    - Username and password input fields
+    - Domain/connection selector dropdown
+    - Test mode for standalone development/testing
+    
+    Usage with Auth0:
+    - Upload this file as a custom login page in your Auth0 tenant
+    - The @@config@@ placeholder will be replaced by Auth0 with the actual configuration
+    - Users will see a Windows XP-style login dialog instead of the default Auth0 Universal Login
+    
+    Usage for testing:
+    - Open the file directly in a browser or serve it locally
+    - The page will run in test mode and show what would happen without actually redirecting
+    
+    Based on shuffle-x.legacy.html, transferring its Auth0 functionality to a Windows XP domain login aesthetic.
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
